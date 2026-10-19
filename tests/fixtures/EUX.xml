@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<versioninfo>
+	<url>https://fota-cloud-dn.ospserver.net/firmware/</url>
+	<firmware>
+		<model>SM-S928B</model>
+		<cc>EUX</cc>
+		<version>
+			<latest o="17">S928BXXU6EZIF/S928BOXM6EZIF/S928BXXU6EZIF</latest>
+			<upgrade>
+				<value rcount='3' fwsize='518838536'>S928BXXS4CZA1/S928BOXM4CZA1/S928BXXS4CZA1</value>
+				<value rcount='5' fwsize='484974435'>S928BXXS4BYG2/S928BOXM4BYG2/S928BXXS4BYG2</value>
+				<value rcount='1' fwsize='647399160'>S928BXXS6DZE1/S928BOXM6DZE1/S928BXXS6DZE1</value>
+				<value rcount='7' fwsize='3218440249'>S928BXXS1AXBG/S928BOXM1AXBG/S928BXXS1AXBG</value>
+				<value rcount='5' fwsize='510099088'>S928BXXU4BYE7/S928BOXM4BYE7/S928BXXU4BYE7</value>
+				<value rcount='7' fwsize='453472578'>S928BXXS4AYB2/S928BOXM4AYB2/S928BXXS4AYB2</value>
+				<value rcount='7' fwsize='3131891439'>S928BXXU1AXCB/S928BOXM1AXCB/S928BXXU1AXCB</value>
+				<value rcount='3' fwsize='465598796'>S928BXXS5CZC1/S928BOXM5CZC1/S928BXXS5CZC1</value>
+				<value rcount='1' fwsize='630849984'>S928BXXS6DZF2/S928BOXM6DZF2/S928BXXS6DZF1</value>
+				<value rcount='7' fwsize='479618934'>S928BXXS4AXKA/S928BOXM4AXKA/S928BXXS4AXKA</value>
+				<value rcount='7' fwsize='622940559'>S928BXXU3AXH7/S928BOXM3AXH7/S928BXXU3AXH7</value>
+				<value rcount='7' fwsize='3126637048'>S928BXXU2AXEC/S928BOXM2AXEC/S928BXXU2AXEC</value>
+				<value rcount='7' fwsize='466770365'>S928BXXU4AYA5/S928BOXM4AYA5/S928BXXU4AYA5</value>
+				<value rcount='1' fwsize='648475001'>S928BXXU5DZDP/S928BOXM5DZDP/S928BXXU5DZDP</value>
+				<value rcount='4' fwsize='3492521321'>S928BXXS4BYH2/S928BOXM4BYH2/S928BXXS4BYH2</value>
+				<value rcount='3' fwsize='524235062'>S928BXXS4CYK8/S928BOXM4CYK8/S928BXXS4CYK8</value>
+				<value rcount='3' fwsize='575010496'>S928BXXU4CYI7/S928BOXM4CYI7/S928BXXU4CYI7</value>
+				<value rcount='3' fwsize='505722241'>S928BXXS5CZB2/S928BOXM5CZB2/S928BXXS5CZB2</value>
+				<value rcount='7' fwsize='3130939381'>S928BXXU1AXCA/S928BOXM1AXCA/S928BXXU1AXCA</value>
+				<value rcount='5' fwsize='500121169'>S928BXXS4BYEC/S928BOXM4BYEC/S928BXXS4BYEC</value>
+				<value rcount='5' fwsize='1176897307'>S928BXXS4BYE3/S928BOXM4BYE3/S928BXXS4BYE3</value>
+				<value rcount='7' fwsize='3101736347'>S928BXXS3AXGF/S928BOXM3AXGF/S928BXXS3AXGF</value>
+				<value rcount='3' fwsize='576611557'>S928BXXS4CYJ7/S928BOXM4CYJ7/S928BXXS4CYJ7</value>
+				<value rcount='1' fwsize='610759899'>S928BXXS6DZH2/S928BOXM6DZH2/S928BXXS6DZH2</value>
+				<value rcount='5' fwsize='1212302620'>S928BXXU4BYD9/S928BOXM4BYD9/S928BXXU4BYD9</value>
+				<value rcount='7' fwsize='3219331820'>S928BXXU1AXB5/S928BOXM1AXB5/S928BXXU1AXB5</value>
+				<value rcount='7' fwsize='3125486702'>S928BXXS2AXEF/S928BOXM2AXEF/S928BXXS2AXEF</value>
+				<value rcount='7' fwsize='615838309'>S928BXXS3AXI8/S928BOXM3AXI8/S928BXXS3AXI8</value>
+				<value rcount='7' fwsize='484312208'>S928BXXU4AXK4/S928BOXM4AXK4/S928BXXU4AXK4</value>
+				<value rcount='1' fwsize='618736500'>S928BXXS6DZG1/S928BOXM6DZG1/S928BXXS6DZG1</value>
+				<value rcount='7' fwsize='594849215'>S928BXXS4AXJB/S928BOXM4AXJB/S928BXXS4AXJB</value>
+				<value rcount='3' fwsize='572541998'>S928BXXS4CYK2/S928BOXM4CYK2/S928BXXS4CYK2</value>
+				<value rcount='7' fwsize='616698404'>S928BXXS3AXI1/S928BOXM3AXI1/S928BXXS3AXI1</value>
+				<value rcount='6' fwsize='5457778232'>S928BXXS4AYB6/S928BOXM4AYB6/S928BXXS4AYB6</value>
+				<value rcount='7' fwsize='3123023945'>S928BXXS3AXFE/S928BOXM3AXFE/S928BXXS3AXFE</value>
+				<value rcount='7' fwsize='3131027562'>S928BXXS2AXD6/S928BOXM2AXD6/S928BXXS2AXD6</value>
+				<value rcount='7' fwsize='3249499138'>S928BXXU1AWM9/S928BOXM1AWM9/S928BXXU1AWM9</value>
+				<value rcount='5' fwsize='1205927586'>S928BXXU4BYCG/S928BOXM4BYCG/S928BXXU4BYCI</value>
+				<value rcount='2' fwsize='4603068722'>S928BXXS5CZD1/S928BOXM5CZD1/S928BXXS5CZD1</value>
+			</upgrade>
+		</version>
+	</firmware>
+	<polling>
+		<period>1</period>
+		<time>15</time>
+		<range>23</range>
+	</polling>
+	<ActiveDeviceInfo>
+		<CycleOfDeviceHeartbeat>14</CycleOfDeviceHeartbeat>
+		<ServiceURL>https://ifota-apis.samsungdm.com/device/fumo/deviceheartbeat</ServiceURL>
+	</ActiveDeviceInfo>
+	<WiFiConnectedPollingInfo>
+		<Cycle></Cycle>
+		<Activated>FALSE</Activated>
+	</WiFiConnectedPollingInfo>
+</versioninfo>

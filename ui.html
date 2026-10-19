@@ -1,0 +1,289 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later · Copyright (C) 2026 Arjun Bhagavatula -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SamRegionHop</title>
+<style>
+  :root {
+    --bg: #f6f6f4; --panel: #ffffff; --ink: #1c1c1a; --muted: #6b6a64; --line: #e3e2dc;
+    --accent: #2457d6; --accent-ink: #ffffff;
+    --good: #1f7a46; --good-bg: #e6f4ec; --warn: #8a5a00; --warn-bg: #fdf3dc;
+    --bad: #b42318; --bad-bg: #fdecea; --console: #16171a; --console-ink: #e6e6e3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121214; --panel: #1b1c1f; --ink: #ececea; --muted: #9a9993; --line: #2c2d31;
+      --accent: #6d95ff; --accent-ink: #0d1020;
+      --good: #6fd39b; --good-bg: #13291d; --warn: #f0c060; --warn-bg: #2d2412;
+      --bad: #ff8a80; --bad-bg: #331614; --console: #0b0c0e; --console-ink: #dcdcd8;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 16px 48px;
+         display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: 24px; }
+  @media (max-width: 860px) { main { grid-template-columns: 1fr; } }
+  header { grid-column: 1 / -1; display: flex; align-items: end; justify-content: space-between;
+           gap: 16px; flex-wrap: wrap; }
+  h1 { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
+  .sub { color: var(--muted); margin: 2px 0 0; }
+  h1 .for { font-weight: 500; color: var(--muted); }
+  label.region { display: flex; align-items: center; gap: 10px; color: var(--muted); }
+  .pick { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  @media (max-width: 860px) { .pick { align-items: flex-start; } }
+  select.csc:disabled { color: var(--muted); }
+  select.csc { font: 500 14.5px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 100%;
+               padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px;
+               background: var(--panel); color: var(--ink); }
+  ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .step { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+  .step.danger { border-color: color-mix(in srgb, var(--bad) 35%, var(--line)); }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  main > * { min-width: 0; }
+  .step h2 { font-size: 15px; margin: 0; display: flex; align-items: center; gap: 8px; }
+  .num { width: 22px; height: 22px; border-radius: 50%; display: inline-grid; place-items: center;
+         font-size: 12px; background: var(--bg); color: var(--muted); border: 1px solid var(--line); }
+  .step p { margin: 6px 0 0; color: var(--muted); font-size: 13.5px; }
+  .tag { font-size: 11.5px; padding: 1px 7px; border-radius: 99px; background: var(--bg);
+         color: var(--muted); border: 1px solid var(--line); font-weight: 500; }
+  button { font: inherit; font-weight: 600; border-radius: 8px; padding: 7px 14px; cursor: pointer;
+           border: 1px solid var(--line); background: var(--panel); color: var(--ink); white-space: nowrap; }
+  button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  button.danger { background: var(--bad); color: #fff; border-color: var(--bad); }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+  .checks { margin: 10px 0 12px; display: grid; gap: 6px; font-size: 13.5px; }
+  .checks label { display: flex; gap: 8px; align-items: start; }
+  .checks input { margin-top: 3px; }
+  .chip { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 99px; }
+  .chip:empty { display: none; }
+  .chip.good { color: var(--good); background: var(--good-bg); }
+  .chip.warn { color: var(--warn); background: var(--warn-bg); }
+  .chip.bad { color: var(--bad); background: var(--bad-bg); }
+  .chip.run { color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  section.out { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .banner { border-radius: 12px; padding: 12px 16px; border: 1px solid var(--line); background: var(--panel); }
+  .banner.good { background: var(--good-bg); border-color: transparent; color: var(--good); }
+  .banner.warn { background: var(--warn-bg); border-color: transparent; color: var(--warn); }
+  .banner.bad { background: var(--bad-bg); border-color: transparent; color: var(--bad); }
+  .banner strong { display: block; }
+  pre { margin: 0; background: var(--console); color: var(--console-ink); border-radius: 12px;
+        padding: 14px 16px; min-height: 340px; max-height: 62vh; overflow: auto; white-space: pre-wrap;
+        word-break: break-word; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .prompt { display: none; background: var(--panel); border: 2px solid var(--bad); border-radius: 12px; padding: 14px 16px; }
+  .prompt.show { display: block; }
+  .prompt .row { justify-content: start; margin-top: 10px; }
+  .prompt input { font: 600 16px ui-monospace, Menlo, monospace; width: 110px; padding: 7px 10px;
+                  border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink);
+                  text-transform: uppercase; }
+  .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .muted { color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>SamRegionHop <span class="for">region (CSC) changer for Samsung phones</span></h1>
+      <p class="sub">Unofficial · not affiliated with Samsung. Run the steps in order; steps 1–4 change nothing.</p>
+    </div>
+    <div class="pick"><label class="region">Target region <select class="csc" id="csc"></select></label>
+      <span class="muted" id="current"></span></div>
+  </header>
+
+  <ol class="steps">
+    <li class="step" data-kind="info">
+      <div class="row"><h2><span class="num">1</span>Read phone <span class="tag">read-only</span></h2>
+        <span class="chip" data-chip></span><button class="primary" data-run="info">Run</button></div>
+      <p>Model, firmware, current region, and whether a change wipes the phone. Needs USB debugging on.</p>
+    </li>
+    <li class="step" data-kind="fota">
+      <div class="row"><h2><span class="num">2</span>Check updates <span class="tag">read-only</span></h2>
+        <span class="chip" data-chip></span><button class="primary" data-run="fota">Run</button></div>
+      <p>Asks Samsung which regions can update your current build.</p>
+    </li>
+    <li class="step" data-kind="probe">
+      <div class="row"><h2><span class="num">3</span>Test modem <span class="tag">read-only</span></h2>
+        <span class="chip" data-chip></span><button class="primary" data-run="probe">Run</button></div>
+      <p>In Developer options turn on <b>Stay awake</b> and, if it's listed, <b>3GPP AT commands</b>. Then dial <b>*#0*#</b> and leave that screen open.</p>
+    </li>
+    <li class="step" data-kind="dryrun">
+      <div class="row"><h2><span class="num">4</span>Dry run <span class="tag">read-only</span></h2>
+        <span class="chip" data-chip></span><button class="primary" data-run="dryrun">Run</button></div>
+      <p>Every check of a real change, then stops. Keep <b>*#0*#</b> open.</p>
+    </li>
+    <li class="step danger" data-kind="change">
+      <div class="row"><h2><span class="num">5</span>Change region</h2>
+        <span class="chip" data-chip></span></div>
+      <p>May <b>factory reset</b> the phone, so back up first. Unlocks after a passing dry run for this region.</p>
+      <div class="checks">
+        <label><input type="checkbox" data-check="backup"> Backed up (Smart Switch, WhatsApp, authenticator apps)</label>
+        <label><input type="checkbox" data-check="passwords"> I know my Google and Samsung account passwords</label>
+        <label><input type="checkbox" data-check="firmware"> I know that if the phone gets stuck on restart, the fix is reflashing firmware (download it then; not needed now)</label>
+      </div>
+      <div class="row"><span class="muted" id="gate"></span><button class="danger" id="change" data-run="change">Change region</button></div>
+    </li>
+  </ol>
+
+  <section class="out">
+    <div class="banner" id="banner"><strong>Ready</strong>Plug in the phone and start with step 1.</div>
+    <div class="prompt" id="prompt">
+      <strong id="promptTitle">Final confirmation</strong>
+      <div class="muted">Type the region code to change it. Anything else cancels and changes nothing.</div>
+      <div class="row"><input id="answer" maxlength="3" spellcheck="false" autocomplete="off">
+        <button class="danger" id="send">Confirm</button><button id="cancel">Cancel</button></div>
+    </div>
+    <div class="toolbar"><span class="muted" id="what">No step run yet</span>
+      <span><button id="report" title="Save a privacy-masked report of the last run to share on GitHub">Make compatibility report</button>
+      <button id="stop" disabled>Stop</button></span></div>
+    <pre id="log"></pre>
+  </section>
+</main>
+<script>
+const T = new URLSearchParams(location.search).get("t");
+const $ = (s, el = document) => el.querySelector(s);
+const NAMES = {info: "Read phone", fota: "Check updates", probe: "Test modem", dryrun: "Dry run",
+               change: "Change region", targets: "Find reliable regions", report: "Compatibility report"};
+let jobId = null, since = 0, last = {}, results = {};
+
+async function api(path, body) {
+  const opts = {headers: {"X-Token": T}};
+  if (body !== undefined) Object.assign(opts, {method: "POST", body: JSON.stringify(body),
+    headers: {"X-Token": T, "Content-Type": "application/json"}});
+  const r = await fetch(path, opts);
+  return r.json();
+}
+// Region names come from regions.json via the helper. Which regions are offered comes only
+// from the tool's reliability check (`targets`), never from this list.
+let REGION_NAMES = {}, currentCsc = null, parsedJob = null;
+const label = c => `${REGION_NAMES[c] || "unknown region"} — ${c}`;
+
+function savedChoice() { try { return localStorage.getItem("samregionhop-target"); } catch (e) { return null; } }
+function saveChoice(v) { try { localStorage.setItem("samregionhop-target", v); } catch (e) {} }
+
+function placeholder(text) {
+  const sel = $("#csc");
+  sel.innerHTML = ""; sel.add(new Option(text, "")); sel.disabled = true;
+}
+
+// Fill the dropdown with exactly the regions the tool confirmed as reliable for this phone.
+function fillRegions(codes) {
+  const sel = $("#csc"), keep = sel.value || savedChoice();
+  if (!codes.length) { placeholder("No regions this phone can reliably switch to"); return; }
+  const sorted = [...codes].sort((a, b) => label(a).localeCompare(label(b)));
+  sel.innerHTML = "";
+  for (const c of sorted) sel.add(new Option(label(c), c));
+  sel.disabled = false;
+  sel.value = sorted.includes(keep) ? keep : sorted.includes("INS") ? "INS" : sorted[0];
+}
+
+const csc = () => ($("#csc").value || "").trim().toUpperCase();
+const checklist = () => Object.fromEntries([...document.querySelectorAll("[data-check]")].map(c => [c.dataset.check, c.checked]));
+
+function outcome(kind, code) {
+  if (code === 0) return ["good", kind === "change" ? "Changed" : kind === "dryrun" ? "Passed" : "Done",
+    kind === "change" ? "The phone confirmed the change and is rebooting. It may factory reset. Afterwards, run step 1 to confirm the region."
+                      : "Finished. Read the output, then move to the next step."];
+  if (code === 2) return ["bad", "Needs attention",
+    "Read the message carefully. The phone may switch region and wipe itself at its next reboot. Finish your backup before rebooting."];
+  return ["warn", "Stopped", kind === "change" || kind === "dryrun"
+    ? "Stopped before changing anything. The reason is in the output."
+    : "Didn't finish. The reason is in the output."];
+}
+
+function render(s) {
+  const running = !!s.running;
+  document.querySelectorAll("[data-run]").forEach(b => b.disabled = running);
+  $("#stop").disabled = !running;
+  const target = csc(), ok = (s.dryrun_ok || []).includes(target);
+  const checked = Object.values(checklist()).every(Boolean);
+  $("#change").textContent = `Change to ${target || "…"}`;
+  $("#change").disabled = running || !ok || !checked;
+  $("#gate").textContent = !ok ? `Needs a passing dry run for ${target}` : !checked ? "Tick all three" : "Ready";
+
+  for (const [kind, r] of Object.entries(results)) {
+    const chip = $(`[data-kind="${kind}"] [data-chip]`);
+    if (chip) { chip.className = "chip " + r[0]; chip.textContent = r[1]; }
+  }
+  if (s.job) {
+    $("#what").textContent = `${NAMES[s.kind]}${["dryrun", "change", "fota"].includes(s.kind) ? " · " + s.csc : ""}`;
+    $("#report").disabled = running;
+    const chip = $(`[data-kind="${s.kind}"] [data-chip]`);
+    if (running && chip) { chip.className = "chip run"; chip.textContent = "Running"; }
+    const b = $("#banner");
+    if (running) {
+      b.className = "banner"; b.innerHTML = s.awaiting
+        ? "<strong>Waiting for you</strong>Confirm or cancel below."
+        : `<strong>Running ${NAMES[s.kind]}…</strong>Follow any instructions in the output.`;
+    } else {
+      const [cls, title, msg] = outcome(s.kind, s.code);
+      b.className = "banner " + cls; b.innerHTML = `<strong>${title}</strong>${msg}`;
+    }
+  }
+  const p = $("#prompt");
+  if (s.awaiting) {
+    if (!p.classList.contains("show")) { $("#answer").value = ""; setTimeout(() => $("#answer").focus(), 0); }
+    $("#promptTitle").textContent = `Type ${s.awaiting} to change the region`;
+    p.classList.add("show");
+  } else p.classList.remove("show");
+}
+
+async function poll() {
+  try {
+    const s = await api(`/state?since=${since}`);
+    if (s.job !== jobId) { jobId = s.job; since = 0; $("#log").textContent = "";
+      if (s.job) { const full = await api(`/state?since=0`); Object.assign(s, full); } }
+    if (s.text) { const log = $("#log"); const atEnd = log.scrollTop + log.clientHeight >= log.scrollHeight - 8;
+      log.textContent += s.text; if (atEnd) log.scrollTop = log.scrollHeight; }
+    if (s.len !== undefined) since = s.len;
+    if (s.job && !s.running && s.code !== null) results[s.kind] = outcome(s.kind, s.code);
+    if (s.job && !s.running && s.code === 0 && parsedJob !== s.job) {
+      parsedJob = s.job;
+      const text = $("#log").textContent;
+      if (s.kind === "info") {  // step 1 done: show the current region, then find reliable targets
+        const active = text.match(/Active CSC\s+([A-Z0-9]{3})\b/);
+        currentCsc = active && active[1];
+        $("#current").textContent = currentCsc ? `Now on: ${label(currentCsc)}` : "";
+        placeholder("Checking which regions are reliable…");
+        api("/run", {kind: "targets"}).then(r => { if (r.error) placeholder("Couldn't check regions: " + r.error); });
+      } else if (s.kind === "targets") {
+        const on = text.match(/\(on ([A-Z0-9]{3})\b/);  // the check names the current region too
+        if (on) { currentCsc = on[1]; $("#current").textContent = `Now on: ${label(currentCsc)}`; }
+        const m = text.match(/Reliable targets:\s*(.+)/);
+        fillRegions(m && m[1].trim() !== "none" ? m[1].trim().split(/\s+/) : []);
+      }
+    }
+    last = s; render(s);
+  } catch (e) {
+    $("#banner").className = "banner warn";
+    $("#banner").innerHTML = "<strong>Lost connection to the helper</strong>Is the Terminal window running SamRegionHop still open?";
+  }
+  setTimeout(poll, 400);
+}
+
+document.querySelectorAll("[data-run]").forEach(b => b.addEventListener("click", async () => {
+  const kind = b.dataset.run, target = csc();
+  if (["fota", "dryrun", "change"].includes(kind) && !/^[A-Z0-9]{3}$/.test(target)) {
+    alert("Run step 1 first, then pick a target region."); return;
+  }
+  if (kind === "change" && !confirm(`Change the region to ${target}? The phone may factory reset.`)) return;
+  const r = await api("/run", {kind, csc: target, checklist: checklist()});
+  if (r.error) alert(r.error);
+}));
+$("#send").addEventListener("click", async () => { await api("/input", {text: $("#answer").value}); });
+$("#answer").addEventListener("keydown", e => { if (e.key === "Enter") $("#send").click(); });
+$("#cancel").addEventListener("click", async () => { await api("/input", {text: ""}); });
+$("#stop").addEventListener("click", () => api("/stop", {}));
+$("#csc").addEventListener("change", () => { saveChoice(csc()); render(last); });
+$("#report").addEventListener("click", async () => {
+  const r = await api("/run", {kind: "report"}); if (r.error) alert(r.error);
+});
+placeholder("Run step 1 to find regions");
+api("/regions").then(r => { REGION_NAMES = r || {}; }).catch(() => {});
+document.querySelectorAll("[data-check]").forEach(c => c.addEventListener("change", () => render(last)));
+poll();
+</script>
+</body>
+</html>
