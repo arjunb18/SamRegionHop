@@ -75,7 +75,7 @@ Quit Smart Switch before steps 3–5: it takes over the phone's USB connection a
 | Model | Chip | One UI (Android) | Computer | Change | Result | Data wiped? |
 |---|---|---|---|---|---|---|
 | SM-S928B (Galaxy S24 Ultra) | Snapdragon (SM8650) | 7.0 (15) | macOS | INS → EUX | ✅ Worked | No |
-| SM-S928B (Galaxy S24 Ultra) | Snapdragon (SM8650) | 9.0 (17) | macOS | EUX → INS | ✅ Worked | Not reported |
+| SM-S928B (Galaxy S24 Ultra) | Snapdragon (SM8650) | 9.0 (17) | macOS | EUX → INS | ✅ Worked | No |
 
 Every other model is untested. Different chips or One UI versions may answer the modem in formats the tool doesn't recognise yet. If so, it stops before changing anything.
 
